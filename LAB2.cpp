@@ -1,14 +1,18 @@
+#include <iomanip>
 #include <iostream>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
 class bitmem
 {
 public:
-    static const size_t item_size = 14;
+    static constexpr size_t item_size = 14;
     typedef unsigned short mem_t;
-    static const size_t mem_t_size = sizeof(mem_t) * 8;
-    static const mem_t item_mask = (1 << item_size) - 1;
+    static constexpr size_t mem_t_size = sizeof(mem_t) * 8;
+    static constexpr mem_t item_mask = (1 << item_size) - 1;
+    static constexpr int char_mask = (1<<8) - 1;
     
     mem_t* mem;
     size_t mem_size;
@@ -57,6 +61,29 @@ public:
 							 ((mem_t) val >> (mem_t_size - shift));
         }
     }
+
+    string str() const
+    {
+    	stringstream s;
+        auto* buff = (unsigned const char*) mem;
+        for(size_t i = mem_size * mem_t_size / 8 - 1; i >= 1; i--)
+        {
+            s << hex << setfill('0') << setw(2) << (int) buff[i] << '.';
+        }
+        s << hex << setfill('0') << setw(2) << (int)buff[0];
+        return s.str();
+    }
+
+    string order() const
+    {
+        stringstream s;
+        for (size_t i = mem_size * mem_t_size / 8 - 1; i >= 1; i--)
+        {
+            s << setfill('0') << setw(2) << i << '.';
+        }
+        s << hex << setfill('0') << setw(2) << 0;
+        return s.str();
+    }
 };
 
 int main()
@@ -65,7 +92,5 @@ int main()
     mem.set(0, 12);
     mem.set(1, 13);
     mem.set(2, 16383);
-    std::cout << mem.get(0) << " "<<mem.get(1) << " " << mem.get(2) << "\n";
-    mem.set(1, 16383);
-    std::cout << mem.get(0) << " " << mem.get(1) << " " << mem.get(2);
+    cout << mem.str() << "\n" << mem.order();
 }

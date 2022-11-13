@@ -1,24 +1,26 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <sstream>
+#include <vector>
+#include <fstream>
 
 using namespace std;
 
 class bitmem
 {
 public:
-    static constexpr size_t item_size = 14;
+    static constexpr size_t item_size = 15;
     typedef unsigned short mem_t;
     static constexpr size_t mem_t_size = sizeof(mem_t) * 8;
     static constexpr mem_t item_mask = (1 << item_size) - 1;
-    static constexpr int char_mask = (1<<8) - 1;
+    static constexpr int char_mask = (1 << 8) - 1;
     
     mem_t* mem;
     size_t mem_size;
     size_t items_num;
-
-public:
+    
     bitmem(size_t items_num): items_num(items_num)
     {
         mem_size = items_num * item_size;
@@ -86,11 +88,79 @@ public:
     }
 };
 
+class processor
+{
+public:
+    using reg_t = bitmem::mem_t;
+    
+    reg_t accum;
+	reg_t line, tick, comm, stat;
+    bitmem ram;
+
+    struct command
+    {
+        enum name_t: reg_t
+        {
+            set, dump, mod
+	    } name;
+
+        reg_t val;
+    } cur_command;
+    vector<string> program;
+
+    processor(vector<string> program, const size_t ram_size = 10):
+		ram(ram_size), accum(0), line(0), tick(0), comm(0), stat(0), cur_command()
+    {
+        this->program = move(program);
+    }
+
+    void do_tick()
+    {
+	    if(tick == 0)
+	    {
+            // Parsing command data from string
+            stringstream s;
+            s << program[line];
+
+            string buff_name;
+            s >> buff_name;
+            if (strcmp(buff_name.c_str(), "set") == 0)
+                cur_command.name = command::set;
+            else if (strcmp(buff_name.c_str(), "dump") == 0)
+                cur_command.name = command::dump;
+            else if (strcmp(buff_name.c_str(), "mod") == 0)
+                cur_command.name = command::mod;
+
+            s >> cur_command.val;
+	    }
+        else if(tick == 1)
+        {
+	        switch (comm)
+	        {
+            case command::set:
+                accum = cur_command.val;
+                break;
+            case command::dump:
+                ram.set(cur_command.val, accum);
+                break;
+            case command::mod:
+                accum %= cur_command.val;
+                break;
+	        }
+        }
+        tick++;
+        tick %= 2;
+    }
+};
+
+
+
 int main()
 {
     bitmem mem(20);
     mem.set(0, 12);
     mem.set(1, 13);
     mem.set(2, 16383);
-    cout << mem.str() << "\n" << mem.order();
+    cout << mem.get(0) << " " << mem.get(1) << " " << mem.get(2) << "\n";
+    cout << mem.str() << "\n" << mem.order() << "\n";
 }

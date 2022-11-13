@@ -30,6 +30,9 @@ The solution source code: [`LAB2.cpp`](./LAB2.cpp)
 
 ## Implemented commands
 
-* *set const* - sets accum to const
-* *dump addr* - dumps accum val to RAM
-* *mod const* - computes accum mod const to accum
+* *set_c const* - sets accum to const
+* *load_ca addr* - loads value of addr in accm
+* *dump_ca addr* - dumps accum val to RAM
+
+* *mod_c const* - computes accum mod const to accum
+* *mod_ca addr* - computes accum mod value of addr to accum

@@ -105,7 +105,7 @@ public:
     {
         enum name_t: reg_t
         {
-            set, dump, mod
+            set_c, dump_ca, load_ca, mod_c, mod_ca
 	    } name;
 
         reg_t val;
@@ -131,12 +131,16 @@ public:
 
             string buff_name;
             s >> buff_name;
-            if (strcmp(buff_name.c_str(), "set") == 0)
-                cur_command.name = command::set;
-            else if (strcmp(buff_name.c_str(), "dump") == 0)
-                cur_command.name = command::dump;
-            else if (strcmp(buff_name.c_str(), "mod") == 0)
-                cur_command.name = command::mod;
+            if (strcmp(buff_name.c_str(), "set_c") == 0)
+                cur_command.name = command::set_c;
+            else if (strcmp(buff_name.c_str(), "dump_ca") == 0)
+                cur_command.name = command::dump_ca;
+            else if (strcmp(buff_name.c_str(), "load_ca") == 0)
+                cur_command.name = command::load_ca;
+            else if (strcmp(buff_name.c_str(), "mod_c") == 0)
+                cur_command.name = command::mod_c;
+            else if (strcmp(buff_name.c_str(), "mod_ca") == 0)
+                cur_command.name = command::mod_ca;
 
             s >> cur_command.val;
 
@@ -146,14 +150,20 @@ public:
         {
 	        switch (comm)
 	        {
-            case command::set:
+            case command::set_c:
                 accm = cur_command.val;
                 break;
-            case command::dump:
+            case command::dump_ca:
                 ram.set(cur_command.val, accm);
                 break;
-            case command::mod:
+            case command::load_ca:
+                accm = ram.get(cur_command.val);
+                break;
+            case command::mod_c:
                 accm %= cur_command.val;
+                break;
+            case command::mod_ca:
+                accm %= ram.get(cur_command.val);
                 break;
 	        }
         }

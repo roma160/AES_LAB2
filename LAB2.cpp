@@ -5,6 +5,8 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
+#include <conio.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -93,9 +95,11 @@ class processor
 public:
     using reg_t = bitmem::mem_t;
     
-    reg_t accum;
+    reg_t accm;
 	reg_t line, tick, comm, stat;
     bitmem ram;
+
+    vector<string> program;
 
     struct command
     {
@@ -106,21 +110,24 @@ public:
 
         reg_t val;
     } cur_command;
-    vector<string> program;
+    string cur_command_str;
 
     processor(vector<string> program, const size_t ram_size = 10):
-		ram(ram_size), accum(0), line(0), tick(0), comm(0), stat(0), cur_command()
+		ram(ram_size), accm(0), line(0), tick(0), comm(0), stat(0), cur_command()
     {
         this->program = move(program);
     }
 
-    void do_tick()
+    bool do_tick()
     {
+        if (line >= program.size()) return false;
+
 	    if(tick == 0)
 	    {
             // Parsing command data from string
             stringstream s;
             s << program[line];
+            cur_command_str = s.str();
 
             string buff_name;
             s >> buff_name;
@@ -132,35 +139,97 @@ public:
                 cur_command.name = command::mod;
 
             s >> cur_command.val;
+
+            comm = cur_command.name;
 	    }
         else if(tick == 1)
         {
 	        switch (comm)
 	        {
             case command::set:
-                accum = cur_command.val;
+                accm = cur_command.val;
                 break;
             case command::dump:
-                ram.set(cur_command.val, accum);
+                ram.set(cur_command.val, accm);
                 break;
             case command::mod:
-                accum %= cur_command.val;
+                accm %= cur_command.val;
                 break;
 	        }
         }
+
+        return line < program.size();
+    }
+
+    void end_tick()
+    {
+        if (tick == 1) line++;
         tick++;
         tick %= 2;
     }
+
+    static string to_binary(reg_t n)
+    {
+        stringstream s;
+        while(n > 0)
+        {
+            s << n % 2;
+            n >>= 1;
+        }
+        string ret = s.str();
+        reverse(ret.begin(), ret.end());
+        ret = string(bitmem::item_size - ret.size(), '0') + ret;
+        for (int i = bitmem::item_size - 8; i > 0; i -= 8)
+            ret.insert(i, 1, '.');
+        return ret;
+    }
+
+    string get_state() const
+    {
+        static constexpr auto delim = "------------------------------------\n";
+
+        stringstream ss;
+        ss << delim << "Current executed line: " << cur_command_str << "\n";
+
+        ss << "\nOperand registers:\n";
+        ss << "accm = " << to_binary(accm) << "\n";
+
+        ss << "\nRAM:\n";
+        ss << ram.str() << "\n" << ram.order() << "\n";
+
+        ss << "\nState registers:\n";
+        ss << "line = " << to_binary(line) << "\n";
+        ss << "tick = " << to_binary(tick) << "\n";
+        ss << "comm = " << to_binary(comm) << "\n";
+        ss << "stat = " << to_binary(stat) << "\n";
+
+        return ss.str();
+    }
 };
 
-
+vector<string> read_file(string filename = "C:/Users/mario/Documents/Documents/University/AES/LABS/LAB2/x64/Debug/program.txt")
+{
+    fstream file(filename, ios_base::in);
+    vector<string> ret{};
+    string buff;
+    while(getline(file, buff))
+    {
+	    if(buff.empty()) continue;
+        ret.push_back(buff);
+    }
+    file.close();
+    return ret;
+}
 
 int main()
 {
-    bitmem mem(20);
-    mem.set(0, 12);
-    mem.set(1, 13);
-    mem.set(2, 16383);
-    cout << mem.get(0) << " " << mem.get(1) << " " << mem.get(2) << "\n";
-    cout << mem.str() << "\n" << mem.order() << "\n";
+    auto program = read_file();
+    processor p(program);
+
+    while(p.do_tick())
+    {
+        cout << p.get_state();
+        _getch();
+        p.end_tick();
+    }
 }

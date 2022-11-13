@@ -24,7 +24,7 @@ The solution source code: [`LAB2.cpp`](./LAB2.cpp)
 
 ## Registres
 
-1) accum
+1) accm
 2) state
 3) tick
 

@@ -4,7 +4,7 @@ The assignment text: [`task.pdf`](./task.pdf)
 
 The solution source code: [`LAB2.cpp`](./LAB2.cpp)
 
-## Variants
+## 1. Variants
 1, 3, 7
 
 1) 1-й операнд завжди в акумуляторі, результат команди заноситься в
@@ -22,17 +22,25 @@ The solution source code: [`LAB2.cpp`](./LAB2.cpp)
 5) потактове виконання команд (наприклад, 1-й такт – занесення команди у регстр команди, 2-й такт - інтерпретація
 операндів, 3-й такт – виконання операції і занесення результату).
 
-## Registres
+## 2. Registres
 
-1) accm
-2) state
-3) tick
+### Operand registers:
+* `accm` = 0000000.00000000
 
-## Implemented commands
+### State registers:
+* `line` = 0000000.00000000
+* `tick` = 0000000.00000000
+* `comm` = 0000000.00000000
+* `stat` = 0000000.00000000
 
-* *set_c const* - sets accum to const
-* *load_ca addr* - loads value of addr in accm
-* *dump_ca addr* - dumps accum val to RAM
+## 3. Implemented commands
 
-* *mod_c const* - computes accum mod const to accum
-* *mod_ca addr* - computes accum mod value of addr to accum
+### Memory
+* **`set_c `**`const` - sets accm to const
+* **`load_ca `**`addr` - loads value of addr in accm
+* **`unwrap`** (no operand) - dereferences the addr in accm to accm
+* **`dump_ca `**`addr` - dumps accm val to RAM
+
+### Operation
+* **`mod_c `**`const` - computes accm mod const to accm
+* **`mod_ca `**`addr` - computes accm mod value of addr to accm

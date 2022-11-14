@@ -3,3 +3,7 @@ project(LAB2_AES VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(main LAB2.cpp)
+
+if(UNIX)
+	target_link_libraries(main ncurses)
+endif(UNIX)

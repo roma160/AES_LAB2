@@ -5,8 +5,14 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
-#include <conio.h>
 #include <algorithm>
+
+#ifdef _WIN32
+#include <conio.h>
+#endif
+#ifdef linux
+#include <curses.h>
+#endif
 
 using namespace std;
 
@@ -239,7 +245,7 @@ int main()
     while(p.do_tick())
     {
         cout << p.get_state();
-        _getch();
+        getch();
         p.end_tick();
     }
 }

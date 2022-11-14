@@ -23,4 +23,3 @@ mod_ca 2
 
 # result
 mod_ca 3
-dump_ca 0

@@ -63,7 +63,8 @@ bool processor::do_tick()
 		) name++;
 
 		IR.name = (command::name_t) name;
-		s >> IR.val;
+		if(IR.name != command::unwrap)
+			s >> IR.val;
 	}
 	else if (TC == 1)
 	{
@@ -112,8 +113,8 @@ std::string processor::get_state() const
 	ss << "Bytes offset " << ram.byte_offset() << "\n";
 	ss << "Items offset " << ram.item_offset() << "\n\n";
 	
-	ss << "PC = " << to_binary(PC) << "\n";
-	ss << "TC = " << to_binary(TC) << "\n";
+	ss << "PC = " << PC << "\n";
+	ss << "TC = " << TC << "\n";
 	ss << "RS = " << to_binary(RS) << "\n";
 
 	if (TC == tc_num - 1) ss << delim;

@@ -21,8 +21,9 @@ vector<string> read_file(string filename = "program.txt")
     string buff;
     while(getline(file, buff))
     {
-	    if(buff.empty() || buff[0] == '#') continue;
+	    if(buff.empty() || buff[0] == '#' || buff[0] == '\r') continue;
         ret.push_back(buff);
+        //cout << buff << "\n";
     }
     file.close();
     return ret;

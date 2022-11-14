@@ -217,9 +217,9 @@ public:
     }
 };
 
-vector<string> read_file(string filename = "C:/Users/mario/Documents/Documents/University/AES/LABS/LAB2/x64/Debug/program.txt")
+vector<string> read_file(string filename = "program.txt")
 {
-    fstream file(filename, ios_base::in);
+    ifstream file(filename, ios_base::in);
     vector<string> ret{};
     string buff;
     while(getline(file, buff))

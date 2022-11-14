@@ -107,8 +107,10 @@ std::string processor::get_state() const
 	ss << delim << "IR = " << IR.str() << "\n\n";
 	
 	ss << "R1 = " << to_binary(R1) << "\n\n";
-	
-	ss << ram.str() << "\n" << ram.order() << "\n\n";
+
+	ss << "RAM          " << ram.str() << "\n";
+	ss << "Bytes offset " << ram.byte_offset() << "\n";
+	ss << "Items offset " << ram.item_offset() << "\n\n";
 	
 	ss << "PC = " << to_binary(PC) << "\n";
 	ss << "TC = " << to_binary(TC) << "\n";

@@ -58,12 +58,22 @@ std::string bitmem::str() const
 	s << hex << setfill('0') << setw(2) << (int)buff[0];
 	return s.str();
 }
-std::string bitmem::order() const
+std::string bitmem::byte_offset() const
 {
 	stringstream s;
 	for (size_t i = mem_size * mem_t_size / 8 - 1; i >= 1; i--)
 	{
 		s << setfill('0') << setw(2) << i << '.';
+	}
+	s << hex << setfill('0') << setw(2) << 0;
+	return s.str();
+}
+std::string bitmem::item_offset() const
+{
+	stringstream s;
+	for (size_t i = mem_size * mem_t_size / 8 - 1; i >= 1; i--)
+	{
+		s << setfill('0') << setw(2) << i * 8 / item_size << '.';
 	}
 	s << hex << setfill('0') << setw(2) << 0;
 	return s.str();

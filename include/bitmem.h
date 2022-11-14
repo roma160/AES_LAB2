@@ -27,5 +27,6 @@ public:
     void set(size_t i, mem_t val);
 
     std::string str() const;
-    std::string order() const;
+    std::string byte_offset() const;
+    std::string item_offset() const;
 };

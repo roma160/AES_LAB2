@@ -36,7 +36,12 @@ int main()
     while(p.do_tick())
     {
         cout << p.get_state();
+#ifdef _WIN32
+        _getch();
+#endif
+#ifdef linux
         getch();
+#endif
         p.end_tick();
     }
 }

@@ -94,9 +94,9 @@ bool processor::do_tick()
 }
 void processor::end_tick()
 {
-	if (TC == 1) PC++;
+	if (TC == tc_num - 1) PC++;
 	TC++;
-	TC %= 2;
+	TC %= tc_num;
 }
 
 std::string processor::get_state() const
@@ -104,18 +104,24 @@ std::string processor::get_state() const
 	static constexpr auto delim = "------------------------------------\n";
 
 	stringstream ss;
-	ss << delim << "Current executed line: " << IR.str() << "\n";
-
-	ss << "\nOperand registers:\n";
-	ss << "R1 = " << to_binary(R1) << "\n";
-
-	ss << "\nRAM:\n";
-	ss << ram.str() << "\n" << ram.order() << "\n";
-
-	ss << "\nState registers:\n";
+	ss << delim << "IR = " << IR.str() << "\n\n";
+	
+	ss << "R1 = " << to_binary(R1) << "\n\n";
+	
+	ss << ram.str() << "\n" << ram.order() << "\n\n";
+	
 	ss << "PC = " << to_binary(PC) << "\n";
 	ss << "TC = " << to_binary(TC) << "\n";
 	ss << "RS = " << to_binary(RS) << "\n";
 
+	if (TC == tc_num - 1) ss << delim;
+
 	return ss.str();
+}
+
+std::string processor::get_program_info() const
+{
+	stringstream ret;
+	ret << "Total program length: " << program.size() << " lines\n";
+	return ret.str();
 }

@@ -21,7 +21,7 @@ vector<string> read_file(string filename = "program.txt")
     string buff;
     while(getline(file, buff))
     {
-	    if(buff.empty()) continue;
+	    if(buff.empty() || buff[0] == '#') continue;
         ret.push_back(buff);
     }
     file.close();
@@ -32,6 +32,7 @@ int main()
 {
     auto program = read_file();
     processor p(program);
+    cout << p.get_program_info() << "\nStarting debug: \n";
 
     while(p.do_tick())
     {

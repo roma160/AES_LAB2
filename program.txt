@@ -1,6 +1,26 @@
-set_c 248
-dump_ca 0
+# Computing (a % c) % (c % b)
+# 
+# a = 32048
+# b = 287
+# c = 7298
 
-set_c 447
-mod_ca 0
+# store a, b, c
+set_c 32048
+dump_ca 0
+set_c 287
+dump_ca 1
+set_c 7298
+dump_ca 2
+
+# c % b
+load_ca 2
+mod_ca 1
+dump_ca 3
+
+# a % c
+load_ca 0
+mod_ca 2
+
+# result
+mod_ca 3
 dump_ca 0

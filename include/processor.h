@@ -11,6 +11,9 @@ class processor
 public:
     using reg_t = bitmem::mem_t;
 
+private:
+    static const reg_t tc_num = 2;
+
     reg_t R1;
     reg_t PC, TC, RS;
     bitmem ram;
@@ -32,10 +35,13 @@ public:
 
     std::vector<std::string> program;
 
+public:
     processor(std::vector<std::string> program, size_t ram_size = 10);
 
     bool do_tick();
     void end_tick();
 
     std::string get_state() const;
+
+    std::string get_program_info() const;
 };

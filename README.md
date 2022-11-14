@@ -25,13 +25,13 @@ The solution source code: [`LAB2.cpp`](./LAB2.cpp)
 ## 2. Registres
 
 ### Operand registers:
-* `accm` = 0000000.00000000
+* `R1` = 0000000.00000000
 
 ### State registers:
-* `line` = 0000000.00000000
-* `tick` = 0000000.00000000
-* `comm` = 0000000.00000000
-* `stat` = 0000000.00000000
+* `IR` = command_name command_val
+* `PC` = 0000000.00000000
+* `TC` = 0000000.00000000
+* `RS` = 0000000.00000000
 
 ## 3. Implemented commands
 
